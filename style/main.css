@@ -117,7 +117,7 @@ input[type=range]:-moz-focusring{
     font-size: .85em;
 }
 
-.item {
+.masonry .item {
     display: inline-block;
     background: #fff;
     padding: 1em;
@@ -130,15 +130,36 @@ input[type=range]:-moz-focusring{
 		transition: all 0.3s ease;
 }
 
-.item:hover{
+
+.masonry .item:hover{
 		background-color: #ddd;
 }
 
-img, iframe {
+.liste .item {
+	background: #fff;
+	padding: 1em;
+	margin: 0 0 1.5em;
+	max-height: 400px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-shadow: 2px 2px 4px 0 #ccc;
+	transition: all 0.3s ease;
+}
+
+
+.masonry .item img, iframe {
     max-width: 100%;
     height: auto;
     display: block;
 		transition: all 0.3s ease;
+}
+
+.liste .item img, iframe {
+	width: auto;
+	max-height: 200px;
+	display: block;
+	transition: all 0.3s ease;
 }
 
 .item:hover img, iframe{

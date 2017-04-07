@@ -1,27 +1,66 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <meta charset="utf-8">
     <title>Pixter</title>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script type="text/javascript" src="script/autocompletion.js"></script>
     <script type="text/javascript" src="script/recherchePhotos.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript" src="script/datatable.js"></script>
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+    <script>
+    $( function() {
+      $( "#tabs" ).tabs();
+    } );
+    </script>
     <link rel="stylesheet" type="text/css" href="style/main.css">
   </head>
   <body>
     <div id="rectangle-up">
+
         <div id="container-search">
           <input type="text" list="suggestions" placeholder="Recherchez votre image..." id="commune"/>
           <datalist id="suggestions">
           </datalist>
           <div id="afficherPhotos"></div>
           <input type="range" min=1 max=100 value="10" id="nbPhotos"/>
-
         </div>
     </div>
     <div class="wrapper">
-      <div class="masonry">
+      <div id="dialog">
       </div>
+      <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Grille</a></li>
+        <li><a href="#tabs-2">Liste</a></li>
+      </ul>
+      <div class="masonry" id="tabs-1">
+      </div>
+      <div class="liste" id="tabs-2">
+        <table id ="tableau" class="display" cellspacing="0" width="100%">
+          <thead>
+           <tr>
+               <th>Nom</th>
+               <th>Heure</th>
+               <th>Auteur</th>
+               <th>Tags</th>
+               <th>Géolocalisation</th>
+           </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+          </table>
+
+      </div>
+    </div>
     </div>
   </body>
 </html>

@@ -12,18 +12,25 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <!--<script type="text/javascript" src="script/datatable.js"></script>-->
     <script src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+
 
     <script>
     $( function() {
       $( "#tabs" ).tabs();
     } );
+    function reload(){
+       $('.value').html( $('#nbPhotos').val() );
+    }
+    $(document).ready(function(){
+      $("#datepicker").datepicker();
+      $('#tableau').DataTable();
+    });
     </script>
     <link rel="stylesheet" type="text/css" href="style/main.css">
   </head>
-  <body>
+  <body onload="reload()">
     <div id="rectangle-up">
 
         <div id="container-search">
@@ -31,7 +38,8 @@
           <datalist id="suggestions">
           </datalist>
           <div id="afficherPhotos"></div>
-          <input type="range" min=1 max=100 value="10" id="nbPhotos"/>
+          <input type="range" min=0 max=20 value="5" step="1" id="nbPhotos"/>
+          <span class="value">10</span>
         </div>
     </div>
     <div class="wrapper">
@@ -45,6 +53,8 @@
       <div class="masonry" id="tabs-1">
       </div>
       <div class="liste" id="tabs-2">
+        <p>Date: <input type="text" id="datepicker"></p>
+        <br />
         <table id ="tableau" class="display" cellspacing="0" width="100%">
           <thead>
            <tr>
@@ -53,22 +63,12 @@
                <th>Heure</th>
                <th>Auteur</th>
                <th>Tags</th>
-               <th>Géolocalisation</th>
            </tr>
        </thead>
        <tbody>
 
        </tbody>
-       <tfoot>
-        <tr>
-            <th>Aperçu</th>
-            <th>Nom</th>
-            <th>Heure</th>
-            <th>Auteur</th>
-            <th>Tags</th>
-            <th>Géolocalisation</th>
-        </tr>
-      </tfoot>
+
           </table>
 
       </div>

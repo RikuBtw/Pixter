@@ -15,8 +15,9 @@ $(document).ready(function(){
             });
         },
         error: function(resultat,statut,erreur){
-          alert("erreur : "+erreur);},
-         });
+          //alert("erreur : "+erreur);
+          },
+        });
        }
     });
 

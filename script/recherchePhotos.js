@@ -3,51 +3,87 @@ $(document).ready(function(){
     $("#afficherPhotos").on("click", afficherPhotos);
     $(document).keypress(function(e) {
       if(e.which == 13) {
-        afficherPhotos();
+        afficherPhotos2();
       }
+    });
+    $("#nbPhotos").on("input", function(){
+       $('.value').html( $(this).val() );
     });
     function afficherPhotos(){
       i = 0;
       $(".masonry").html(" ");
       $("#autocomplete").css("display", "block");
       $.ajax({
-
-        url : 'https://api.flickr.com/services/rest/',
+        url : 'http://api.flickr.com/services/feeds/photos_public.gne',
         type:'GET',
-        dataType:'json', // a renseigner d'après la doc du service, par défaut callback
-        data:'method=flickr.photos.search&api_key=4eb465e56335170d0ad0bf809b89c00f&tags='+$("#commune").val()+'&per_page='+$("#nbPhotos").val()+'&format=json&nojsoncallback=1',
+        dataType:'jsonp',
+        jsonp: 'jsoncallback',
+        data: 'tags='+$("#commune").val()+'&tagmode=any&format=json',
         success:function(data){
           if (data.length == 0 ) {
             console.log("NO DATA!")
           }else{
             $(".masonry").html("");
-            $("#tableau tbody").empty();
-            $.each(data.photos.photo, function(i,item){
+            $('#tableau').DataTable().rows().clear();
+            $.each(data.items, function(i,item){
               i+=1;
               $("<div>").attr("class", "item").attr("id", "item-grille"+i).appendTo(".masonry");
-              $("<img>").attr("src", "https://farm"+item.farm+".staticflickr.com/"+item.server+"/"+item.id+"_"+item.secret+".jpg").appendTo("#item-grille"+i);
-              $("#item-grille"+i).click(dialog);
+              $("<img>").attr("src", item.media.m).appendTo("#item-grille"+i);
+              $("#item-grille"+i).click(afficherInfos);
 
-              image = "https://farm"+item.farm+".staticflickr.com/"+item.server+"/"+item.id+"_"+item.secret+".jpg";
+              image =  item.media.m;
               imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+image+"); background-position: 50% 50%; background-repeat: no-repeat;'></div>";
-              nom = "Nom";
-              heure = "Heure";
-              auteur = "Auteur";
-              tags = "Tags";
-              geolocalisation = "Geo";
-              content = "<tr><td>"+imageStyle+"</td><td>"+nom+"</td><td>"+heure+"</td><td>"+auteur+"</td><td>"+tags+"</td><td>"+geolocalisation+"</td></tr>";
-              $('#tableau').append(content);
+              nom = item.title;
+              heure = item.date_taken;
+              auteur = item.author.substring(20).slice(0,-2);
+              id_auteur = item.author_id;
+              tags = item.tags;
+              tags = tags.replace(new RegExp(" ", "g"), ", ");
+              description = item.description;
+
+              $('#tableau').DataTable().row.add([
+                imageStyle,
+                nom,
+                heure,
+                auteur,
+                tags
+              ]).draw( false );
+              if ( i == $("#nbPhotos").val() ) return false ;
             });
           }
-          $('#tableau').DataTable();
         },
         error: function(resultat,statut,erreur){
           alert("erreur : "+erreur);},
         });
 
     }
-    function dialog() {
+    function afficherInfos(){
+        $("#autocomplete").css("display", "block");
+        var titre, datePost, username;
+        $.ajax({
+          url : 'https://api.flickr.com/services/rest/',
+          type:'GET',
+          dataType:'json',
+          data:'method=flickr.photos.getInfo&api_key=4eb465e56335170d0ad0bf809b89c00f&photo_id='+$(this).data("id")+'&secret='+$(this).data("secret")+'&format=json&nojsoncallback=1',
+          success:function(data){
+              username = data.photo.owner.username;
+              titre = data.photo.title._content;
+              datePost = formattedDate;
+
+
+          },
+          error: function(resultat,statut,erreur){
+            alert("erreur : "+erreur);
+          },
+          async: false
+          });
+          console.log(titre);
+          console.log(datePost);
+          dialog($(this).find('img').attr("src"), datePost, titre, username);
+    }
+    function dialog(src, datePost, titre, username) {
       var originalContent;
+      console.log("titre 2 : "+titre);
       $("#dialog").dialog(
         {
           height: 'auto',
@@ -65,7 +101,12 @@ $(document).ready(function(){
         }
 
       );
-      $("<img>").attr("src", $(this).find('img').attr("src")).appendTo("#dialog");
+      console.log($(".ui-dialog-title"));
+      $(".ui-dialog-title").text(titre);
+      $("<img>").attr("src", src).appendTo("#dialog");
+      $("<p>").text(titre).appendTo("#dialog");
+      $("<p>").text(datePost).appendTo("#dialog");
+      $("<p>").text(username).appendTo("#dialog");
     }
   }
 

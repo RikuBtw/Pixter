@@ -38,7 +38,8 @@ form{
 	align-items: center;
 	height: 40px;
 	width: 800px;
-  margin-left: 40px;
+  margin-left: 30px;
+	margin-right: 10px;
 	transition: all 0.2s ease;
 }
 
@@ -74,8 +75,8 @@ form{
 #nbPhotos{
 	width: 20%;
 	height: 100%;
-	margin-left: 5%;
-	margin-right: 5%;
+	margin-left: 2%;
+	margin-right: 2%;
 
 }
 
@@ -85,7 +86,7 @@ input[type=range]{
 
 input[type=range]::-moz-range-track {
     width: 100%;
-    height: 10px;
+    height: 8px;
     background: rgba(255, 255, 255, 0.1);;
     border-radius: 1em;
 }
@@ -102,6 +103,29 @@ input[type=range]:-moz-focusring{
      outline: none;
 }
 
+.value {
+	font-family: 'Arial';
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  color: #2c3e50;
+  text-align: center;
+  border-radius: 3px;
+  background: #fff;
+  padding: 5px 10px;
+  margin-left: 2px;
+}
+.value::after {
+	position: absolute;
+	top: 8px;
+	left: -12px;
+	width: 5px;
+	height: 0;
+	border-top: 7px solid transparent;
+	border-right: 7px solid #fff;
+	border-bottom: 7px solid transparent;
+	content: '';
+}
 
 .wrapper {
 
@@ -210,8 +234,4 @@ input[type=range]:-moz-focusring{
 	height: 100%;
   width: 100%;
 	background-color: rgba(0, 0, 0, 0.8);
-}
-
-.showcase img{
-	z-index: 1001;
 }

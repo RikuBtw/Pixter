@@ -12,9 +12,10 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script type="text/javascript" src="script/datatable.js"></script>
-    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <!--<script type="text/javascript" src="script/datatable.js"></script>-->
+    <script src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+
     <script>
     $( function() {
       $( "#tabs" ).tabs();
@@ -47,6 +48,7 @@
         <table id ="tableau" class="display" cellspacing="0" width="100%">
           <thead>
            <tr>
+               <th>Aperçu</th>
                <th>Nom</th>
                <th>Heure</th>
                <th>Auteur</th>
@@ -57,6 +59,16 @@
        <tbody>
 
        </tbody>
+       <tfoot>
+        <tr>
+            <th>Aperçu</th>
+            <th>Nom</th>
+            <th>Heure</th>
+            <th>Auteur</th>
+            <th>Tags</th>
+            <th>Géolocalisation</th>
+        </tr>
+      </tfoot>
           </table>
 
       </div>

@@ -21,13 +21,25 @@ $(document).ready(function(){
             console.log("NO DATA!")
           }else{
             $(".masonry").html("");
+            $("#tableau tbody").empty();
             $.each(data.photos.photo, function(i,item){
               i+=1;
               $("<div>").attr("class", "item").attr("id", "item-grille"+i).appendTo(".masonry");
               $("<img>").attr("src", "https://farm"+item.farm+".staticflickr.com/"+item.server+"/"+item.id+"_"+item.secret+".jpg").appendTo("#item-grille"+i);
               $("#item-grille"+i).click(dialog);
-        });
+
+              image = "https://farm"+item.farm+".staticflickr.com/"+item.server+"/"+item.id+"_"+item.secret+".jpg";
+              imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+image+"); background-position: 50% 50%; background-repeat: no-repeat;'></div>";
+              nom = "Nom";
+              heure = "Heure";
+              auteur = "Auteur";
+              tags = "Tags";
+              geolocalisation = "Geo";
+              content = "<tr><td>"+imageStyle+"</td><td>"+nom+"</td><td>"+heure+"</td><td>"+auteur+"</td><td>"+tags+"</td><td>"+geolocalisation+"</td></tr>";
+              $('#tableau').append(content);
+            });
           }
+          $('#tableau').DataTable();
         },
         error: function(resultat,statut,erreur){
           alert("erreur : "+erreur);},

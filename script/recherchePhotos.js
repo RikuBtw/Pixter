@@ -36,6 +36,12 @@ $(document).ready(function(){
               $("<div>").attr("class", "item").attr("id", "item-grille"+i).appendTo(".masonry");
               $("<img>").attr("src", photo.photo).appendTo("#item-grille"+i);
               $("#item-grille"+i).click({param1: photo},afficherInfos);
+              photo.titre = "" ;
+              photo.datePost = "";
+              photo.auteurPseudo = "";
+              photo.auteur = "";
+              photo.tags ="";
+              photo.description="";
 
               $.ajax({
                 url : 'https://api.flickr.com/services/rest/',
@@ -43,7 +49,6 @@ $(document).ready(function(){
                 dataType:'json',
                 data:'method=flickr.photos.getInfo&api_key=4eb465e56335170d0ad0bf809b89c00f&photo_id='+photo.id+'&secret='+photo.secret+'&format=json&nojsoncallback=1',
                 success:function(data){
-                  console.log(data);
                   $.each(data, function(i,item){
                     photo.titre = item.title._content;
                     photo.datePost = item.dates.taken;
@@ -61,10 +66,8 @@ $(document).ready(function(){
                 error: function(resultat,statut,erreur){
                   alert("erreur : "+erreur);},
                 });
-
-              console.log(photo.titre);
-              console.log(photo.date);
-              imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+photo.photo+"); background-position: 50% 50%; background-repeat: no-repeat;'></div>";
+              console.log(photo);
+              imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+photo.photo+");background-repeat: no-repeat;background-size:cover;'></div>";
               $('#tableau').DataTable().row.add([
                 imageStyle,
                 photo.titre,

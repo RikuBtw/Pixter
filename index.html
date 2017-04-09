@@ -24,10 +24,14 @@
        $('.value').html( $('#nbPhotos').val() );
     }
     $(document).ready(function(){
-      $("#datepicker").datepicker();
-      $('#tableau').DataTable({
-    responsive: true
-});
+      $("#datepicker").datepicker({
+        dateFormat: "dd/mm/yy" ,
+        onSelect: function() {
+          var table = $('#tableau').DataTable();
+          table.search($(this).val()).draw();
+        }
+      });
+      $('#tableau').DataTable();
     });
     </script>
     <link rel="stylesheet" type="text/css" href="style/main.css">
@@ -63,10 +67,9 @@
                <th>Aperçu</th>
                <th>Nom</th>
                <th>Heure</th>
+               <th>Posté le</th>
                <th>Auteur</th>
-               <th>Pseudo</th>  
                <th>Tags</th>
-               <th>Description</th>
            </tr>
        </thead>
        <tbody>

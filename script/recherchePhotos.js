@@ -36,46 +36,52 @@ $(document).ready(function(){
               $("<div>").attr("class", "item").attr("id", "item-grille"+i).appendTo(".masonry");
               $("<img>").attr("src", photo.photo).appendTo("#item-grille"+i);
               $("#item-grille"+i).click({param1: photo},afficherInfos);
-              photo.titre = "Titre" ;
-              photo.datePost = "Date";
-              photo.auteurPseudo = "Pseudo";
-              photo.auteur = "Auteur";
-              photo.tags ="tags";
-              photo.description="description";
+              photo.titre = "test" ;
+              photo.heurePost = "";
+              photo.datePost = "";
+              photo.auteurPseudo = "";
+              photo.auteur = "";
+              photo.tags ="";
+              photo.description="";
 
+              var titre = "test 1";
               $.ajax({
                 url : 'https://api.flickr.com/services/rest/',
                 type:'GET',
                 dataType:'json',
                 data:'method=flickr.photos.getInfo&api_key=4eb465e56335170d0ad0bf809b89c00f&photo_id='+photo.id+'&secret='+photo.secret+'&format=json&nojsoncallback=1',
                 success:function(data){
-                  $.each(data, function(i,item){
-                    photo.titre = item.title._content;
-                    photo.datePost = item.dates.taken;
-                    photo.auteurPseudo = item.owner.username;
-                    photo.auteur = item.owner.realname;
+                    photo.titre = data.photo.title._content;
+                    var date = new Date(data.photo.dates.posted*1000);
+                    var hours = date.getHours();
+                    var minutes = "0" + date.getMinutes();
+                    var seconds = "0" + date.getSeconds();
+                    var day = "0"+date.getDate();
+                    var month = ("0" + (date.getMonth() + 1)).slice(-2)
+                    var year = date.getFullYear();
+                    photo.heurePost = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+                    photo.datePost = day+"/"+month+'/'+year;
+                    photo.auteurPseudo = data.photo.owner.username;
                     tag ="";
-                    for (j =0 ; j< item.tags.tag.length; j++){
-                      tag += item.tags.tag[j].raw += " ";
+                    for (j =0 ; j< data.photo.tags.tag.length; j++){
+                      tag += data.photo.tags.tag[j].raw += " ";
                     }
                     photo.tags = tag;
-                    photo.description = item.description._content;
-                    console.log(photo);
-                  })
+                    photo.description = data.photo.description._content;
+                    titre = "test 2";
                 },
+                async: false,
                 error: function(resultat,statut,erreur){
                   alert("erreur : "+erreur);},
                 });
-              console.log(photo);
-              imageStyle = "<img src ="+photo.photo+" style = 'width:300px;height: auto;'></img>";
+              imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+photo.photo+");background-repeat: no-repeat;background-size:cover;'></div>";
               $('#tableau').DataTable().row.add([
                 imageStyle,
                 photo.titre,
+                photo.heurePost,
                 photo.datePost,
-                photo.auteur,
                 photo.auteurPseudo,
-                photo.tags,
-                photo.description
+                photo.tags
               ]).draw( false );
             });
           }
@@ -95,7 +101,6 @@ $(document).ready(function(){
     }
     function dialog(src, datePost, titre, username) {
       var originalContent;
-      console.log("titre 2 : "+titre);
       $("#dialog").dialog(
         {
           height: 'auto',
@@ -113,7 +118,6 @@ $(document).ready(function(){
         }
 
       );
-      console.log($(".ui-dialog-title"));
       $(".ui-dialog-title").text(titre);
       $("<img>").attr("src", src).appendTo("#dialog");
       $("<p>").text(titre).appendTo("#dialog");

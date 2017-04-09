@@ -25,7 +25,9 @@
     }
     $(document).ready(function(){
       $("#datepicker").datepicker();
-      $('#tableau').DataTable();
+      $('#tableau').DataTable({
+    responsive: true
+});
     });
     </script>
     <link rel="stylesheet" type="text/css" href="style/main.css">
@@ -62,7 +64,9 @@
                <th>Nom</th>
                <th>Heure</th>
                <th>Auteur</th>
+               <th>Pseudo</th>  
                <th>Tags</th>
+               <th>Description</th>
            </tr>
        </thead>
        <tbody>

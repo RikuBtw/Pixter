@@ -3,7 +3,7 @@ $(document).ready(function(){
     $("#afficherPhotos").on("click", afficherPhotos);
     $(document).keypress(function(e) {
       if(e.which == 13) {
-        afficherPhotos2();
+        afficherPhotos();
       }
     });
     $("#nbPhotos").on("input", function(){
@@ -36,12 +36,12 @@ $(document).ready(function(){
               $("<div>").attr("class", "item").attr("id", "item-grille"+i).appendTo(".masonry");
               $("<img>").attr("src", photo.photo).appendTo("#item-grille"+i);
               $("#item-grille"+i).click({param1: photo},afficherInfos);
-              photo.titre = "" ;
-              photo.datePost = "";
-              photo.auteurPseudo = "";
-              photo.auteur = "";
-              photo.tags ="";
-              photo.description="";
+              photo.titre = "Titre" ;
+              photo.datePost = "Date";
+              photo.auteurPseudo = "Pseudo";
+              photo.auteur = "Auteur";
+              photo.tags ="tags";
+              photo.description="description";
 
               $.ajax({
                 url : 'https://api.flickr.com/services/rest/',
@@ -67,13 +67,15 @@ $(document).ready(function(){
                   alert("erreur : "+erreur);},
                 });
               console.log(photo);
-              imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+photo.photo+");background-repeat: no-repeat;background-size:cover;'></div>";
+              imageStyle = "<img src ="+photo.photo+" style = 'width:300px;height: auto;'></img>";
               $('#tableau').DataTable().row.add([
                 imageStyle,
                 photo.titre,
                 photo.datePost,
                 photo.auteur,
-                photo.tags
+                photo.auteurPseudo,
+                photo.tags,
+                photo.description
               ]).draw( false );
             });
           }

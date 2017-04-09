@@ -14,41 +14,64 @@ $(document).ready(function(){
       $(".masonry").html(" ");
       $("#autocomplete").css("display", "block");
       $.ajax({
-        url : 'http://api.flickr.com/services/feeds/photos_public.gne',
+        url : 'https://api.flickr.com/services/rest/',
         type:'GET',
         dataType:'jsonp',
         jsonp: 'jsoncallback',
-        data: 'tags='+$("#commune").val()+'&tagmode=any&format=json',
+        data:'method=flickr.photos.search&api_key=4eb465e56335170d0ad0bf809b89c00f&tags='+$("#commune").val()+'&per_page='+$("#nbPhotos").val()+'&format=json&nojsoncallback=1',
         success:function(data){
           if (data.length == 0 ) {
             console.log("NO DATA!")
           }else{
             $(".masonry").html("");
             $('#tableau').DataTable().rows().clear();
-            $.each(data.items, function(i,item){
+            $.each(data.photos.photo, function(i,item){
+
+              var photo = new Object();
+
+              photo.id=item.id;
+              photo.secret=item.secret;
+              photo.photo = "https://farm"+item.farm+".staticflickr.com/"+item.server+"/"+item.id+"_"+item.secret+".jpg";
               i+=1;
               $("<div>").attr("class", "item").attr("id", "item-grille"+i).appendTo(".masonry");
-              $("<img>").attr("src", item.media.m).appendTo("#item-grille"+i);
-              $("#item-grille"+i).click(afficherInfos);
+              $("<img>").attr("src", photo.photo).appendTo("#item-grille"+i);
+              $("#item-grille"+i).click({param1: photo},afficherInfos);
 
-              image =  item.media.m;
-              imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+image+"); background-position: 50% 50%; background-repeat: no-repeat;'></div>";
-              nom = item.title;
-              heure = item.date_taken;
-              auteur = item.author.substring(20).slice(0,-2);
-              id_auteur = item.author_id;
-              tags = item.tags;
-              tags = tags.replace(new RegExp(" ", "g"), ", ");
-              description = item.description;
+              $.ajax({
+                url : 'https://api.flickr.com/services/rest/',
+                type:'GET',
+                dataType:'json',
+                data:'method=flickr.photos.getInfo&api_key=4eb465e56335170d0ad0bf809b89c00f&photo_id='+photo.id+'&secret='+photo.secret+'&format=json&nojsoncallback=1',
+                success:function(data){
+                  console.log(data);
+                  $.each(data, function(i,item){
+                    photo.titre = item.title._content;
+                    photo.datePost = item.dates.taken;
+                    photo.auteurPseudo = item.owner.username;
+                    photo.auteur = item.owner.realname;
+                    tag ="";
+                    for (j =0 ; j< item.tags.tag.length; j++){
+                      tag += item.tags.tag[j].raw += " ";
+                    }
+                    photo.tags = tag;
+                    photo.description = item.description._content;
+                    console.log(photo);
+                  })
+                },
+                error: function(resultat,statut,erreur){
+                  alert("erreur : "+erreur);},
+                });
 
+              console.log(photo.titre);
+              console.log(photo.date);
+              imageStyle = "<div style='width: 300px; height: 200px; background-image: url("+photo.photo+"); background-position: 50% 50%; background-repeat: no-repeat;'></div>";
               $('#tableau').DataTable().row.add([
                 imageStyle,
-                nom,
-                heure,
-                auteur,
-                tags
+                photo.titre,
+                photo.datePost,
+                photo.auteur,
+                photo.tags
               ]).draw( false );
-              if ( i == $("#nbPhotos").val() ) return false ;
             });
           }
         },
@@ -57,29 +80,13 @@ $(document).ready(function(){
         });
 
     }
-    function afficherInfos(){
+    function afficherInfos(event){
         $("#autocomplete").css("display", "block");
         var titre, datePost, username;
-        $.ajax({
-          url : 'https://api.flickr.com/services/rest/',
-          type:'GET',
-          dataType:'json',
-          data:'method=flickr.photos.getInfo&api_key=4eb465e56335170d0ad0bf809b89c00f&photo_id='+$(this).data("id")+'&secret='+$(this).data("secret")+'&format=json&nojsoncallback=1',
-          success:function(data){
-              username = data.photo.owner.username;
-              titre = data.photo.title._content;
-              datePost = formattedDate;
-
-
-          },
-          error: function(resultat,statut,erreur){
-            alert("erreur : "+erreur);
-          },
-          async: false
-          });
-          console.log(titre);
-          console.log(datePost);
-          dialog($(this).find('img').attr("src"), datePost, titre, username);
+        username = event.data.param1.auteurPseudo;
+        titre = event.data.param1.titre;
+        datePost = event.data.param1.datePost;
+        dialog($(this).find('img').attr("src"), datePost, titre, username);
     }
     function dialog(src, datePost, titre, username) {
       var originalContent;
